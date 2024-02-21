@@ -2,6 +2,35 @@ import sys
 from Adafruit_IO import MQTTClient
 import random
 import time
+import cv2
+import numpy as np
+from keras.models import load_model
+
+# This part can extract to seperated file
+model=load_model('keras_model.h5')
+
+camera= cv2.VideoCapture(0)
+
+labels = open('labels.txt','r').readlines()
+
+
+def image_detector():
+    ret,image=camera.read()
+    
+    image=cv2.resize(image,(224,224),interpolation=cv2.INTER_AREA)
+    
+    # cv2.imshow('Webcam Image',image)
+    
+    image=np.asarray(image,dtype=np.float32).reshape(1,224,224,3)
+    
+    image=(image/127.5)-1
+    pro=model.predict(image)
+    
+    #print(labels[np.argmax(pro)])
+    # keyboard = cv2.waitKey(1)
+    
+    return labels[np.argmax(pro)]
+
 
 AIO_FEED_ID = ['nutnhan1','nutnhan2']
 ADAFRUIT_IO_USERNAME = "thanhthien412"
@@ -32,7 +61,9 @@ client.loop_background() # for_blocking  (stop in heres)
 
 counter=10
 sensor_type=0
-
+counter_ai = 5
+previous_result=''
+result=''
 while True:
     counter=counter-1
     if counter<=0:
@@ -53,5 +84,14 @@ while True:
             print('Lightning....')
             client.publish('cambien3',light)
             sensor_type=0
+    
+    counter_ai-=1
+    if counter_ai <=0:
+        result=image_detector()
+        print(f'AI Output {result}')
+        if(previous_result!=result):
+            client.publish('ai',result)
+            previous_result=result
+
     time.sleep(1)
     pass

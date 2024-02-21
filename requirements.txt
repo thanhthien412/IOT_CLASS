@@ -1,2 +1,7 @@
 adafruit-io==2.7.1
 paho-mqtt==1.6.1
+opencv-python 
+numpy 
+keras
+Pillow
+tensorflow
