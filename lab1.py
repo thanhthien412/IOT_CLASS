@@ -36,7 +36,7 @@ def image_detector():
 
 AIO_FEED_ID = ['nutnhan1','nutnhan2']
 ADAFRUIT_IO_USERNAME = "thanhthien412"
-ADAFRUIT_IO_KEY = "aio_lezG49KEf54dN90qWhvp55m8sxIq"
+ADAFRUIT_IO_KEY = "aio_xFlm397cQgQEvEWvLLdBtgtlQRe1"
 
 def connected(client):
     print("Ket noi thanh cong ...")
@@ -51,7 +51,18 @@ def disconnected(client):
     sys.exit (1)
 
 def message(client , feed_id , payload):
-    print("Nhan du lieu: " + payload + f'feed id : {feed_id}')
+    print("Nhan du lieu: " + payload + f'  feed id : {feed_id}')
+    
+    if(feed_id=='nutnhan1'):
+        if payload =='0':
+            writeSerial('Nut nhan 1 off\n')
+        else:
+            writeSerial('Nut nhan 1 on\n')
+    elif feed_id=='nutnhan2':
+        if payload =='0':
+            writeSerial('Nut nhan 2 off\n')
+        else:
+            writeSerial('Nut nhan 2 on\n')  
 
 client = MQTTClient(ADAFRUIT_IO_USERNAME , ADAFRUIT_IO_KEY)
 client.on_connect = connected
