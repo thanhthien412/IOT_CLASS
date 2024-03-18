@@ -11,7 +11,7 @@ from  uart import *
 # This part can extract to seperated file
 model=load_model('keras_model.h5', compile=False)
 
-# camera= cv2.VideoCapture(0)
+camera= cv2.VideoCapture(0)
 
 labels = ['Không khẩu trang','Đeo khẩu trang','Không có người']
 
@@ -36,7 +36,7 @@ def image_detector():
 
 AIO_FEED_ID = ['nutnhan1','nutnhan2']
 ADAFRUIT_IO_USERNAME = "thanhthien412"
-ADAFRUIT_IO_KEY = "aio_xFlm397cQgQEvEWvLLdBtgtlQRe1"
+ADAFRUIT_IO_KEY = "aio_vdeq61RoTc5EfPGUCyvnZq829G53"
 
 def connected(client):
     print("Ket noi thanh cong ...")
@@ -78,33 +78,33 @@ counter_ai = 5
 previous_result=''
 result=''
 while True:
-    # counter=counter-1
-    # if counter<=0:
-    #     counter=10
-    #     print('Random data is publishing')
-    #     if sensor_type==0:
-    #         temp=random.randint(40,60)
-    #         print('Temperature....')
-    #         client.publish('cambien1',temp)
-    #         sensor_type=1
-    #     elif sensor_type==1:
-    #         humi=random.randint(50,70)
-    #         print('Humnity....')
-    #         client.publish('cambien2',humi)
-    #         sensor_type=2
-    #     else:
-    #         light=random.randint(20,100)
-    #         print('Lightning....')
-    #         client.publish('cambien3',light)
-    #         sensor_type=0
+    counter=counter-1
+    if counter<=0:
+        counter=10
+        print('Random data is publishing')
+        if sensor_type==0:
+            temp=random.randint(40,60)
+            print(f'Temperature.... {temp}')
+            client.publish('cambien1',temp)
+            sensor_type=1
+        elif sensor_type==1:
+            humi=random.randint(50,70)
+            print(f'Humnity.... {humi}')
+            client.publish('cambien2',humi)
+            sensor_type=2
+        else:
+            light=random.randint(20,100)
+            print(f'Lightning.... {light}')
+            client.publish('cambien3',light)
+            sensor_type=0
     
-    # counter_ai-=1
-    # if counter_ai <=0:
-    #     result=image_detector()
-    #     print(f'AI Output {result}')
-    #     if(previous_result!=result):
-    #         client.publish('ai',result)
-    #         previous_result=result
+    counter_ai-=1
+    if counter_ai <=0:
+        result=image_detector()
+        print(f'AI Output {result}')
+        if(previous_result!=result):
+            client.publish('ai',result)
+            previous_result=result
     
     readSerial(client)
 
